@@ -14,7 +14,7 @@
 	<!-- 그래서 이름이 같아도 형태가 다르기 때문에 구분이 되서 괜찮음 -->
 	<form action="/board/register" method="post">
 		title : <input type="text" name="title"><br>
-		writer : <input type="text" name="writer"><br>
+		writer : <input type="text" name="writer" value="${ses.id }" readonly="readonly"><br>
 		content : <textarea rows="5" cols="50" name="content"></textarea><br>
 		<button type="submit">등록</button>
 	</form>

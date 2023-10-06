@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.ezen.myproject.repository.MemberDAO">
+	<!-- 회원가입 전 아이디 중복 확인 -->
+	<select id="getUser" parameterType="String" resultType="com.ezen.myproject.domain.MemberVo">
+	select * from member where id=#{id}
+	</select>
+	<!-- 회원가입 -->
+	<insert id="signUp" parameterType="com.ezen.myproject.domain.MemberVo">
+	insert into member(id,pw,name,email,home,age)
+	values(#{id},#{pw},#{name},#{email},#{home},#{age})
+	</insert>
+	<update id="update" parameterType="com.ezen.myproject.domain.MemberVo">
+	update member set
+	pw =#{pw}, name=#{name}, email=#{email}, home=#{home}, age=#{age}
+	where id=#{id}
+	</update>
+
+      
+  </mapper>

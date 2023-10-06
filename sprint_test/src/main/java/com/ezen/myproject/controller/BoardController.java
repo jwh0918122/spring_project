@@ -18,17 +18,18 @@ import com.ezen.myproject.service.BoardService;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@RequestMapping("/board/*")
+@RequestMapping("/board/*") //jsp에서 받아올때 url 앞에 /board/붙어있는건 여기서 처리한다
 @Controller
 public class BoardController {
 	
 	@Inject  // new로 생성자 만들것과 같은 것(@autoWired써도 됨)
-	private BoardService bsv;
-	
+	private BoardService bsv; 
+	 
 	
 	
 	@GetMapping("/register")
 	public String boardRegisterGet() {
+		
 		return "/board/register"; //.jsp는 생략
 	}
 	

@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -21,7 +22,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Home</a>
+          <a class="nav-link active" aria-current="page" href="/">Home</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">Link</a>
@@ -37,22 +38,32 @@
             <li><a class="dropdown-item" href="#">Something else here</a></li>
           </ul>
         </li> --> 
-        <li class="nav-item">
-          <a class="nav-link" href="#">Log In</a>
+        <c:if test="${ses.id eq null }">
+         <li class="nav-item">
+          <a class="nav-link" href="/member/login">Log In</a>
         </li>
          <li class="nav-item">
-          <a class="nav-link" href="#">Log Out</a>
-        </li>
+          <a class="nav-link" href="/member/signup" >Sign Up</a>
+        </li>  
+           
+        </c:if>
+     
+       <c:if test="${ses.id ne null }">
          <li class="nav-item">
-          <a class="nav-link" href="#" >Sign Up</a>
+          <a class="nav-link" href="/member/logout">Log Out</a>
         </li>
+        
          <li class="nav-item">
           <a class="nav-link" href="/board/register" >REG</a>
         </li>
-         <li class="nav-item">
-          <a class="nav-link" href="/board/list">Board List</a>
-        </li>
+        </c:if>
         
+          <li class="nav-item">
+          <a class="nav-link" href="/board/list">Board List</a>
+        </li>  
+         <c:if test="${ses.id ne null }">
+ <a href="/member/modify"> <p class="nav-link">[${ses.id }님]<p></a>
+</c:if>
       </ul>
     <!--   <form class="d-flex" role="search">
         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
