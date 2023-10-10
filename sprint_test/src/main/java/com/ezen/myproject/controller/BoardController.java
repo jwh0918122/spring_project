@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ezen.myproject.domain.BoardVo;
+import com.ezen.myproject.domain.PagingVo;
+import com.ezen.myproject.handler.PagingHandler;
 import com.ezen.myproject.service.BoardService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -42,10 +44,15 @@ public class BoardController {
 	}
 	
 	@GetMapping("/list")
-	public String list(Model model) {  //Model 객체는 내보낼 것이 있을 때(model.addAttribute)
-		List<BoardVo> list = bsv.getList();
-		log.info(">>>>>>>>>board getList >>"+list);
+	public String list(Model model,PagingVo pgvo) {  //Model 객체는 내보낼 것이 있을 때(model.addAttribute)
+		log.info(">>>>> PaginVo >>> "+pgvo);
+		//getList(pgvo);  pgvo들고가서 limit해주는거
+		List<BoardVo> list = bsv.getList(pgvo);
+//		log.info(">>>>>>>>>board getList >>"+list);
 		model.addAttribute("list", list); //request객체의 setAttribute를 Model객체가 해주는 거
+		int totalCount = bsv.getTotalCount(pgvo);//등록
+		PagingHandler ph = new PagingHandler(pgvo, totalCount);
+		model.addAttribute("ph", ph);
 		return "/board/list";
 	}
 	

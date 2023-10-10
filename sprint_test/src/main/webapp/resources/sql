@@ -30,3 +30,12 @@ home varchar(100),
 age int,
 reg_date datetime default now(),
 primary key(id));
+
+--2023-10-10
+create table comment(
+cno int not null auto_increment,
+bno int not null,
+writer varchar(100) not null,
+content varchar(1000),
+reg_date datetime default now(),
+primary key(cno));
