@@ -44,7 +44,7 @@
 	<div>
 		<!-- 댓글 작성 라인 -->
 		<div>
-			<span id="cmtWriter">${ses.id }</span> 
+			<span id="cmtWriter" >${ses.id }</span> 
 			<input type="text" id="cmtText" placeholder="Add Comment...">
 			<button type="button" id="cmtPostBtn">댓글등록</button>
 		</div>
@@ -66,6 +66,9 @@ const bnoVal =`<c:out value="${bvo.bno}"/>`;
 console.log(bnoVal);
 </script>
 <script type="text/javascript" src="/resources/js/boardComment.js"></script>
+<script type="text/javascript">
+getCommentList(bnoVal);
+</script>
 
 	<jsp:include page="../layout/footer.jsp"></jsp:include>
 </body>

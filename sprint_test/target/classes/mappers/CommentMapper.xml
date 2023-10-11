@@ -8,5 +8,13 @@
   insert into comment (bno, writer, content)
   values(#{bno},#{writer},#{content})
   </insert>
-  
+  <select id="getList" resultType="com.ezen.myproject.domain.CommentVo">
+  select * from comment where bno=#{bno} order by cno desc
+  </select>
+  <update id="update">
+  update comment set content=#{content} where cno=#{cno}
+  </update>
+  <delete id="delete">
+  delete from comment where cno=#{cno}
+  </delete>
   </mapper>
