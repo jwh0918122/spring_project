@@ -39,3 +39,14 @@ writer varchar(100) not null,
 content varchar(1000),
 reg_date datetime default now(),
 primary key(cno));
+
+--2023-10-12
+create table file(
+uuid varchar(256) not null,
+save_dir varchar(256) not null,
+file_name varchar(256) not null,
+file_type tinyint(1) default 0,  //tinyint < smallint < int < bigint
+bno int,
+file_size int,
+reg_date datetime default now(),
+primary key(uuid));

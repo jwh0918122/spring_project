@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ezen.myproject.domain.BoardVo;
@@ -35,11 +36,22 @@ public class BoardController {
 		return "/board/register"; //.jsp는 생략
 	}
 	
+// file기능 반영X
+//	@PostMapping("/register")
+//	public String register(BoardVo bvo,RedirectAttributes reAttr) {
+//		log.info(">>>>>>>>>>>"+bvo.toString());
+//		int isOk = bsv.register(bvo);
+//		log.info(">>>>>>> board register >> "+(isOk>0?"OK":"FAIL"));
+//		return "redirect:/board/list";
+//	}
+	
+	//required = false : 해당 파라미터가 없어도 예외가 발생하지 않음(필수 여부)
 	@PostMapping("/register")
-	public String register(BoardVo bvo,RedirectAttributes reAttr) {
-		log.info(">>>>>>>>>>>"+bvo.toString());
-		int isOk = bsv.register(bvo);
-		log.info(">>>>>>> board register >> "+(isOk>0?"OK":"FAIL"));
+	public String register(BoardVo bvo, @RequestParam(name="files",required = false)MultipartFile[] files) {
+		log.info(">>>>>bvo >> "+bvo.toString());
+		log.info(">>>>>files >> "+files);
+//		int isOk = bsv.register(bvo);
+//		log.info(">>>>>>> board register >> "+(isOk>0?"OK":"FAIL"));
 		return "redirect:/board/list";
 	}
 	

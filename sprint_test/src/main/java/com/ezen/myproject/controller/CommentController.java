@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.print.attribute.standard.Media;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ezen.myproject.domain.CommentVo;
+import com.ezen.myproject.domain.MemberVo;
 import com.ezen.myproject.service.CommentService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -57,23 +60,46 @@ public class CommentController {
 		return new ResponseEntity<List<CommentVo>>(list, HttpStatus.OK);
 
 	}
-	
+
 	@PutMapping(value = "/{cno}", consumes = "application/json", produces = MediaType.TEXT_PLAIN_VALUE)
-	public ResponseEntity<String> edit(@PathVariable("cno") int cno,@RequestBody CommentVo cvo) {
+	public ResponseEntity<String> edit(@PathVariable("cno") int cno, @RequestBody CommentVo cvo,
+			HttpServletRequest req) {
 		log.info(">>>>comment modify cno>> " + cno);
 		log.info(">>>>comment modify cvo>> " + cvo);
-		int isOk = csv.edit(cvo);
+		int isOk = 0;
+		HttpSession ses = req.getSession();
+		if (ses != null) {
+			MemberVo mvo = (MemberVo) ses.getAttribute("ses");
+			if (mvo.getId().equals(cvo.getWriter())) {
+				isOk = csv.edit(cvo);
+
+			} else {
+				return new ResponseEntity<String>("2", HttpStatus.OK);
+			}
+		}
+
 		return isOk > 0 ? new ResponseEntity<String>("1", HttpStatus.OK)
 				: new ResponseEntity<String>("0", HttpStatus.INTERNAL_SERVER_ERROR);
 
 	}
-	
-	@DeleteMapping(value="/{cno}", produces = MediaType.TEXT_PLAIN_VALUE)
-	public ResponseEntity<String> remove(@PathVariable("cno") int cno){
-		log.info(">>>>comment remove cno>> "+cno);
-		int isOk=csv.remove(cno);
-		return isOk>0? new ResponseEntity<String>("1",HttpStatus.OK)
-				: new ResponseEntity<String>("0",HttpStatus.INTERNAL_SERVER_ERROR);
+
+	@DeleteMapping(value = "/{cno}/{writer}", produces = MediaType.TEXT_PLAIN_VALUE)
+	public ResponseEntity<String> remove(@PathVariable("cno") int cno, @PathVariable("writer") String writer,
+			HttpServletRequest req) {
+		log.info(">>>>comment remove cno>> " + cno);
+		int isOk = 0;
+		HttpSession ses = req.getSession();
+		if (ses != null) {
+			MemberVo mvo = (MemberVo) ses.getAttribute("ses");
+			if (writer.equals(mvo.getId())) {
+				isOk = csv.remove(cno);
+
+			} else {
+				return new ResponseEntity<String>("2", HttpStatus.OK);
+			}
+		}
+		return isOk > 0 ? new ResponseEntity<String>("1", HttpStatus.OK)
+				: new ResponseEntity<String>("0", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 }

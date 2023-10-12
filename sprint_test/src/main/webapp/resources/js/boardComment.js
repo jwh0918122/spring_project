@@ -119,9 +119,9 @@ async function editCommentToServer(cmtModData) {
     }
 }
 //삭제 요청 함수
-async function removeCommentToServer(cno) {
+async function removeCommentToServer(cno, writer) {
     try {
-        const url = "/comment/" + cno;
+        const url = "/comment/" + cno + "/" + writer;
         const config = {
             method: 'delete'
         }
@@ -157,6 +157,7 @@ document.addEventListener('click', (e) => {
         if (writerVal == cmtWriter) {//sesid와 writer가 같으면 
             let cmtModData = {
                 cno: cnoVal,
+                writer: writerVal,
                 content: textContent
             };
             console.log(cmtModData);
@@ -165,10 +166,13 @@ document.addEventListener('click', (e) => {
             editCommentToServer(cmtModData).then(result => {
                 if (result == 1) {
                     alert('댓글 수정 성공!');
-                    getCommentList(bnoVal);
+
+                } else if (result == 2) {
+                    alert('작성자가 일치하지 않습니다.')
                 } else {
                     alert('댓글 수정 실패');
                 }
+                getCommentList(bnoVal);
             })
         } else {
             alert(`${cmtWriter}님이 등록한 게시물만 수정 가능합니다.`)
@@ -179,13 +183,16 @@ document.addEventListener('click', (e) => {
 
         if (writerVal == cmtWriter) {
             //서버 연결
-            removeCommentToServer(cnoVal).then(result => {
+            removeCommentToServer(cnoVal, writerVal).then(result => {
                 if (result == 1) {
                     alert('댓글 삭제 성공');
-                    getCommentList(bnoVal);
+
+                } else if (result == 2) {
+                    alert('작성자가 일치하지 않습니다.')
                 } else {
                     alert('댓글 삭제 실패');
                 }
+                getCommentList(bnoVal);
             })
         } else {
             alert(`${cmtWriter}님이 등록한 게시물만 삭제 가능합니다.`)

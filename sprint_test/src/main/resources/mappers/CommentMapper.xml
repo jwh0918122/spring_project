@@ -12,7 +12,7 @@
   select * from comment where bno=#{bno} order by cno desc
   </select>
   <update id="update">
-  update comment set content=#{content} where cno=#{cno}
+  update comment set content=#{content},reg_date=now() where cno=#{cno}
   </update>
   <delete id="delete">
   delete from comment where cno=#{cno}

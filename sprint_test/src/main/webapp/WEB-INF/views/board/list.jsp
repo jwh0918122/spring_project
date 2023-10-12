@@ -87,7 +87,7 @@
 		
 	<script type="text/javascript">
 	const isOk=`<c:out value="${isOk}"/>`;
-	consol.log(isOk);
+	console.log(isOk);
 	if(isOk==1){
 		alert('삭제 완료')
 	}
