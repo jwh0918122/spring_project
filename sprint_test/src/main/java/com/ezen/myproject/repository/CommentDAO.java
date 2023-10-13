@@ -14,4 +14,5 @@ public interface CommentDAO {
 
 	int delete(int cno);
 
+
 }

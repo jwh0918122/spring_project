@@ -13,8 +13,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.ezen.myproject.domain.BoardDTO;
 import com.ezen.myproject.domain.BoardVo;
+import com.ezen.myproject.domain.FileVo;
 import com.ezen.myproject.domain.PagingVo;
+import com.ezen.myproject.handler.FileHandler;
 import com.ezen.myproject.handler.PagingHandler;
 import com.ezen.myproject.service.BoardService;
 
@@ -27,7 +30,9 @@ public class BoardController {
 	
 	@Inject  // new로 생성자 만들것과 같은 것(@autoWired써도 됨)
 	private BoardService bsv; 
-	 
+	
+	@Inject
+	private FileHandler fhd;
 	
 	
 	@GetMapping("/register")
@@ -49,9 +54,21 @@ public class BoardController {
 	@PostMapping("/register")
 	public String register(BoardVo bvo, @RequestParam(name="files",required = false)MultipartFile[] files) {
 		log.info(">>>>>bvo >> "+bvo.toString());
-		log.info(">>>>>files >> "+files);
-//		int isOk = bsv.register(bvo);
-//		log.info(">>>>>>> board register >> "+(isOk>0?"OK":"FAIL"));
+		log.info(">>>>>files >> "+files);	
+		List<FileVo> flist = null;
+		//files가 null일 수 있음. 첨부파일이 있을 경우메나 fhd 호출
+		if(files[0].getSize() >0) {
+			//첫번째 파일의 size가 0보다 크다면...
+			//flist에 파일 객체 담기
+			flist = fhd.uploadFile(files); //FileHandler의 메서드 사용 			
+		}else {
+			log.info("file null");
+		}
+		
+		BoardDTO bdto = new BoardDTO(bvo,flist);
+		
+		int isOk = bsv.register(bdto);
+		log.info(">>>>>>> board register >> "+(isOk>0?"OK":"FAIL"));
 		return "redirect:/board/list";
 	}
 	
@@ -59,7 +76,10 @@ public class BoardController {
 	public String list(Model model,PagingVo pgvo) {  //Model 객체는 내보낼 것이 있을 때(model.addAttribute)
 		log.info(">>>>> PaginVo >>> "+pgvo);
 		//getList(pgvo);  pgvo들고가서 limit해주는거
+	
 		List<BoardVo> list = bsv.getList(pgvo);
+	
+		
 //		log.info(">>>>>>>>>board getList >>"+list);
 		model.addAttribute("list", list); //request객체의 setAttribute를 Model객체가 해주는 거
 		int totalCount = bsv.getTotalCount(pgvo);//등록
@@ -75,8 +95,7 @@ public class BoardController {
 		log.info(">>>>>> board detail bno >>"+"bno");
 		
 		BoardVo bvo=bsv.getDetail(bno);
-		model.addAttribute("bvo", bvo);
-	
+		model.addAttribute("bvo", bvo);	
 	}
 
 	

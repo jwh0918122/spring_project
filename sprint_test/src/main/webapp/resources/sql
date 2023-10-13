@@ -50,3 +50,7 @@ bno int,
 file_size int,
 reg_date datetime default now(),
 primary key(uuid));
+
+--2023-10-13
+alter table board add fileCount int default 0;
+alter table board add commentCount int default 0;

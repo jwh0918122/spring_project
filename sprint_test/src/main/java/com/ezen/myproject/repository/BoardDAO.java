@@ -23,4 +23,13 @@ public interface BoardDAO {
 
 	int TotalCount(PagingVo pgvo);
 
+	int selectBno();
+
+
+	int updateCommentCount();
+
+	void fileCount(@Param("bno") int bno, @Param("size")int size);
+
+	int updateFileCount();
+
 }

@@ -18,10 +18,14 @@ public class CommentServiceImpl implements CommentService {
 	@Inject
 	private CommentDAO cdao;
 
+	@Inject
+	private BoardService bsv;
+	
 	@Override
 	public int post(CommentVo cvo) {
 		// TODO Auto-generated method stub
-		return cdao.insert(cvo);
+		int isOk =cdao.insert(cvo);
+		return isOk;
 	}
 
 	@Override
@@ -41,5 +45,7 @@ public class CommentServiceImpl implements CommentService {
 		// TODO Auto-generated method stub
 		return cdao.delete(cno);
 	}
+	
+
 	
 }

@@ -17,4 +17,5 @@
   <delete id="delete">
   delete from comment where cno=#{cno}
   </delete>
+  
   </mapper>

@@ -46,6 +46,7 @@ public class CommentController {
 		log.info(">>>> cvo >> " + cvo);
 		// DB연결
 		int isOk = csv.post(cvo);
+				
 		// 리턴시 response의 통신상태를 같이 리턴
 		return isOk > 0 ? new ResponseEntity<String>("1", HttpStatus.OK)
 				: new ResponseEntity<String>("0", HttpStatus.INTERNAL_SERVER_ERROR);

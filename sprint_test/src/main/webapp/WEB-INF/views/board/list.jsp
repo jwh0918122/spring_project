@@ -47,6 +47,8 @@
 				<th>작성자</th>
 				<th>작성일</th>
 				<th>조회수</th>
+				<th>댓글수</th>
+				<th>파일수</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -57,9 +59,9 @@
 					<td><a href="/board/detail?bno=${bvo.bno }">${bvo.writer }</a></td>
 					<td><a href="/board/detail?bno=${bvo.bno }">${bvo.registerDate }</a></td>
 					<td><a href="/board/detail?bno=${bvo.bno }">${bvo.read_count }</a></td>
+					<td><a href="/board/detail?bno=${bvo.bno }">${bvo.commentCount }</a></td>
+					<td><a href="/board/detail?bno=${bvo.bno }">${bvo.fileCount }</a></td>
 				</tr>
-
-
 			</c:forEach>
 		</tbody>
 

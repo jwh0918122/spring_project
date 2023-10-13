@@ -8,14 +8,24 @@
 		insert into board(title,writer,content)
 		values(#{title},#{writer},#{content})
 	</insert>
+	
+	<update id="updateCommentCount">
+		update board set commentCount = (select count(cno) from comment where bno = board.bno)
+	</update>
+	<update id="updateFileCount">
+		update board set fileCount = (select count(uuid) from file where bno=board.bno)
+	</update>
+	
 	<select id="getList"
 		parameterType="com.ezen.myproject.handler.PagingHandler"
 		resultType="com.ezen.myproject.domain.BoardVo">
 		select * from board where isDel='N'
 		<include refid="search"></include>
 		order by bno desc
-		limit #{pageStart},#{qty}
-		
+		limit #{pageStart},#{qty}		
+	</select>
+	<select id="selectBno" resultType="int">
+	select max(bno) from board;
 	</select>
 	<select id="getDetail" parameterType="int"
 		resultType="com.ezen.myproject.domain.BoardVo">
@@ -36,6 +46,8 @@
 	select count(*) from board where isDel='N'
 	<include refid="search"></include>
 	</select>
+	
+
 
 	<!-- includ -->
 	<sql id="search">
