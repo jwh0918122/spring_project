@@ -34,7 +34,7 @@ public class FileHandler {
 		LocalDate date = LocalDate.now(); // 자바에서 오늘 날짜를 리턴해줌
 		log.info(">>> date : " + date);
 		String today = date.toString(); // 2023-10-23 String으로 변환
-		// 2023\\10\\13 String 생성
+		// 2023-10-23 => 2023\\10\\13 변환
 		today = today.replace("-", File.separator);
 
 		// 오늘날짜(today)의 폴더 구성
@@ -52,7 +52,7 @@ public class FileHandler {
 
 			// 파일 이름(OriginalFilename() 설정)
 			log.info(">>>>>> getName : " + file.getName()); // 파일 객체의 종류
-			log.info(">> oriName : " + file.getOriginalFilename()); // 이름
+			log.info(">> uriName : " + file.getOriginalFilename()); // 이름
 			String originalFileName = file.getOriginalFilename();
 			// originalFileName이 파일 경로를 포함하고 있을 수도 있어서
 			String onlyFileName = originalFileName.substring(originalFileName.lastIndexOf(File.separator) + 1); // 실
@@ -76,6 +76,7 @@ public class FileHandler {
 
 			// 저장 => 해당 폴더가 없으면 저장이 안되기 때문에 io Exception발생하므로 try~catch 필수
 			try {
+				//file.transferTo(경로)를 실행하면 지정한 경로에 파일이 저장됩니다.
 				file.transferTo(storeFile);// 원본 객체 저장을 위한 형태로 변경 후 복사
 				// 파일 타입을 결정 => 이미지 파일이라면 썸네일 생성
 				if (isImgeFile(storeFile)) {

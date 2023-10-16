@@ -17,7 +17,7 @@
 
 	<!-- 파일 경로 설정 -->
 	<!-- 내가 /upload/** 로 찾으면 D:\_myweb\_java\fileupload 에서 찾아오라는 의미 -->
-	<resources mapping="/upload/**" location="file:///D:\_myweb\_java\fileupload" />
+	<resources mapping="/upload/**" location="file:///D:\_myweb\_java\fileupload\" />
 
 	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
 	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">

@@ -4,9 +4,14 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -93,26 +98,48 @@ public class BoardController {
 	//detail은 detail.jsp로, modify는 modify.jsp로 가야하기 때문에
 	public void datail(Model model, @RequestParam("bno")int bno) { //model은 보내주는 거, bno는 파라미터
 		log.info(">>>>>> board detail bno >>"+"bno");
-		
-		BoardVo bvo=bsv.getDetail(bno);
-		model.addAttribute("bvo", bvo);	
+
+		//BoardVo bvo=bsv.getDetail(bno);
+		//파일 내용도 포함해서 같이 가져가야 함.
+		BoardDTO bdto = bsv.getDetailFile(bno);
+		model.addAttribute("boardDTO",bdto);	
 	}
 
 	
 	@PostMapping("/modify")
-	public String modify(BoardVo bvo,RedirectAttributes reAttr) {
-		log.info(">>>>>>>>>>>"+bvo.toString());
-		int isOk=bsv.modify(bvo);
+	public String modify(BoardVo bvo,@RequestParam(name="files", required = false)MultipartFile[] files ) {
+		log.info(">>>>>>>>>>>"+bvo);
+		log.info(">>>> modify files>>"+files);
+		
+		List<FileVo> flist = null;
+		if(files[0].getSize()>0) { //수정 file이 존재함
+			//기존 파일은 이미 DB에 등록 완료. 삭제할 파일은 비동기로 이미 삭제 완료.
+			// 새로 추가할 파일만 추가
+		
+			flist = fhd.uploadFile(files); //fvo 구성 List로 리턴
+		}
+		
+		BoardDTO bdto = new BoardDTO(bvo,flist);
+	
+		int isOk=bsv.modifyFile(bdto);
 		log.info(">>>>> board modify >>"+(isOk>0?"OK":"FAIL"));
 		return "redirect:/board/detail?bno="+bvo.getBno(); //detail.jsp로 갈건데 내부 list메서드 타고 나서 가라
 	}
 	
-	@GetMapping("/remove")
-	public String remove(@RequestParam("bno")int bno,RedirectAttributes reAttr) {
+	@GetMapping("/remove") //<= 일반 쿼리파라미터 방식
+	public String remove(@RequestParam("bno")int bno,RedirectAttributes reAttr) {//<= 일반 쿼리파라미터 방식
 		log.info(">>>>>> board remove bno >>"+"bno");
 		int isOk=bsv.remove(bno);
 		reAttr.addFlashAttribute("isOk", isOk); //일회성 attribute
 		return "redirect:/board/list";
+	}
+	
+	@DeleteMapping(value="/file/{uuid}",produces = MediaType.TEXT_PLAIN_VALUE ) //<=REST API방식 
+	public ResponseEntity<String> removeFile(@PathVariable("uuid") String uuid){//<=REST API방식 
+		log.info(">>>>File remove uuid >> ={}",uuid);
+		int isOk=bsv.removeFile(uuid);
+		return isOk>0?new ResponseEntity<String>("1",HttpStatus.OK)
+				: new ResponseEntity<String>("0",HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 }
