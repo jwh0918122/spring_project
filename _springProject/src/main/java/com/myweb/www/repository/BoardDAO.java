@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.myweb.www.domain.BoardVO;
+import com.myweb.www.domain.PagingVo;
 
 public interface BoardDAO {
 
@@ -22,4 +23,7 @@ public interface BoardDAO {
 
 	void readCount(long bno);
 
+	List<BoardVO> getList(PagingVo pagingVO);
+
+	int getTotalCount(PagingVo pagingVO);
 }

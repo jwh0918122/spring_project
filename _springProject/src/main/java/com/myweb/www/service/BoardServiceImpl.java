@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.myweb.www.domain.BoardVO;
+import com.myweb.www.domain.PagingVo;
 import com.myweb.www.repository.BoardDAO;
 
 import lombok.extern.slf4j.Slf4j;
@@ -14,10 +15,12 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class BoardServiceImpl implements BoardService{
 	private BoardDAO bdao;
+	private CommentService csv;
 	
 	@Autowired
-	public BoardServiceImpl(BoardDAO bdao) {
+	public BoardServiceImpl(BoardDAO bdao,CommentService csv) {
 		this.bdao=bdao;
+		this.csv=csv;
 	}
 
 	@Override
@@ -47,8 +50,19 @@ public class BoardServiceImpl implements BoardService{
 	}
 
 	@Override
-	public int remove(long bno) {
+	public int remove(long bno) {		
+		csv.deleteCommentAll(bno);//게시글 지우기전 댓글 먼저 지우기
 		return bdao.delete(bno);
+	}
+
+	@Override
+	public List<BoardVO> getList(PagingVo pagingVO) {
+		return bdao.getList(pagingVO);
+	}
+
+	@Override
+	public int getTotalCount(PagingVo pagingVO) {
+		return bdao.getTotalCount(pagingVO);
 	}
 
 }

@@ -10,21 +10,9 @@
 <jsp:include page="common/header.jsp"/>
 <jsp:include page="common/nav.jsp"/>
 
-<h3>Start aligned text on all viewport sizes.
-
-Center aligned text on all viewport sizes.
-
-End aligned text on all viewport sizes.
-
-End aligned text on viewports sized SM (small) or wider.
-
-End aligned text on viewports sized MD (medium) or wider.
-
-End aligned text on viewports sized LG (large) or wider.
-
-End aligned text on viewports sized XL (extra large) or wider.
-
-End aligned text on viewports sized XXL (extra extra large) or wider.</h3>
+<h3>
+메인입니다.
+</h3>
 
 <jsp:include page="common/footer.jsp"/>
 </body>

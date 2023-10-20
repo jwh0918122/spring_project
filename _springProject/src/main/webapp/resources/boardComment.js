@@ -1,0 +1,1 @@
+console.log("bnoVal2>>" + bnoVal);

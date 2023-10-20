@@ -7,6 +7,8 @@
 <title>Board Modify Page</title>
 </head>
 <body>
+	<jsp:include page="../common/header.jsp" />
+	<jsp:include page="../common/nav.jsp" />
 	<form action="/board/modify" method="post">
 		<table class="table">
 			<tr>
@@ -31,5 +33,6 @@
 		<button class="btn btn-primary" type="submit">수정 완료</button>
 		<button class="btn btn-primary" type="button">리스트로</button>
 	</form>
+	<jsp:include page="../common/footer.jsp" />
 </body>
 </html>
