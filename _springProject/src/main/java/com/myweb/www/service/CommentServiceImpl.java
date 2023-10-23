@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.myweb.www.domain.CommentVO;
+import com.myweb.www.domain.PagingVo;
+import com.myweb.www.handler.PagingHandler;
 import com.myweb.www.repository.CommentDAO;
 
 import lombok.extern.slf4j.Slf4j;
@@ -25,10 +27,10 @@ public class CommentServiceImpl implements CommentService{
 		return cdao.insert(cvo);
 	}
 
-	@Override
-	public List<CommentVO> getList(long bno) {
-		return cdao.selectAll(bno);
-	}
+//	@Override
+//	public List<CommentVO> getList(long bno) {
+//		return cdao.selectAll(bno);
+//	}
 
 	@Override
 	public int remove(long cno) {
@@ -39,4 +41,23 @@ public class CommentServiceImpl implements CommentService{
 	public void deleteCommentAll(long bno) {
 		cdao.deleteCommentAll(bno);
 	}
+
+	@Override
+	public int modify(CommentVO cvo) {
+		return cdao.update(cvo);
+	}
+
+	@Override
+	public PagingHandler getList(long bno, PagingVo pgvo) {
+		// totalCount 구하기
+		int totalCount = cdao.selectOneBnoTotalCount(bno);
+		// Comment List 찾아오기
+		List<CommentVO> list = cdao.selectListPaging(bno,pgvo);
+		// pagingHandler 값 완성 후 리턴
+		PagingHandler ph = new PagingHandler(pgvo, totalCount,list);
+		
+		return ph;
+	}
+
+
 }

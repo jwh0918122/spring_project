@@ -62,8 +62,16 @@
 
 			<!-- 댓글 표시 라인 -->
 			<ul class="list-group list-group-flush" id="cmtListArea">
-
 			</ul>
+
+			<!-- 댓글 더보기 버튼 -->
+			<div>
+				<div>
+					<!-- style="visibility: hidden" <= 숨김 -->
+					<button type="button" id="moreBtn" data-page="1" class="btn btn-outline-dark" style="visibility:hidden">MORE+</button>
+				</div>
+			</div>
+
 			<!-- 모달창 -->
 			<div class="modal" id="myModal" tabindex="-1">
 				<div class="modal-dialog">
@@ -73,32 +81,33 @@
 							<button type="button" class="btn-close" data-bs-dismiss="modal"
 								aria-label="Close"></button>
 						</div>
-						
+
 						<div class="modal-body">
-							 <div class="input-group mb-3">
-							 <input type="text" class="form-control" id="cmtTextMod" placeholder="Test Comment">
-							<button class="btn btn-primary" id="cmtModBtn" type="button">수정</button>
-						</div>
-						
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary"
-								data-bs-dismiss="modal">Close</button>
-							
+							<div class="input-group mb-3">
+								<input type="text" class="form-control" id="cmtTextModal"
+									placeholder="Test Comment">
+								<button class="btn btn-primary" id="cmtModBtn" type="button">수정</button>
+							</div>
+
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary"
+									data-bs-dismiss="modal">Close</button>
+
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
 
-	</div>
-	<script type="text/javascript">
-		let bnoVal = `<c:out value="${bvo.bno}"/>`;
-		console.log("bnoVal>>> " + bnoVal);
-	</script>
-	<script type="text/javascript" src="/resources/js/boardComment.js"></script>
-	<script type="text/javascript">
-		printCommentList(bnoVal);
-	</script>
-	<jsp:include page="../common/footer.jsp" />
+		</div>
+		<script type="text/javascript">
+			let bnoVal = `<c:out value="${bvo.bno}"/>`;
+			console.log("bnoVal>>> " + bnoVal);
+		</script>
+		<script type="text/javascript" src="/resources/js/boardComment.js"></script>
+		<script type="text/javascript">
+			printCommentList(bnoVal);
+		</script>
+		<jsp:include page="../common/footer.jsp" />
 </body>
 </html>

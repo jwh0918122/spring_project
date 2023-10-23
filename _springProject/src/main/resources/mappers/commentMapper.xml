@@ -10,12 +10,25 @@
  <select id="selectAll" resultType="com.myweb.www.domain.CommentVO">
  select * from comment where bno=#{bno}
  </select>
+ 
  <delete id="delete">
  delete from comment where cno=#{cno}
  </delete>
   <delete id="deleteCommentAll">
   delete from comment where bno=#{bno}
   </delete>
+  <update id="update">
+  update comment set content=#{content}, mod_at=now() 
+  where cno=#{cno}
+  </update>
+  <select id="selectOneBnoTotalCount" resultType="int">
+  select count(*) from comment where bno=#{bno}
+  </select>
+  <select id="selectListPaging" resultType="com.myweb.www.domain.CommentVO">
+  select * from comment where bno=#{bno}
+  order by cno desc
+  limit #{pgvo.pageStart}, #{pgvo.qty}<!-- 파라미터 값이 2개라서(bno,pgvo) pgvo.써주는 거임 -->
+  </select>
   
   </mapper>
   
