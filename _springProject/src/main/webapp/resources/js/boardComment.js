@@ -63,7 +63,7 @@ async function spreadCommentListFromServer(bno, page) {
 
 
 //댓글 리스트 출력 함수
-function printCommentList(bno, page = 1) { //page=1인거는 처음 뿌릴 때는 무조검 첫페이지 뿌리라고 한거
+function printCommentList(bno, page = 1) { //page=1인거는 처음 뿌릴 때는 무조검 첫페이지 뿌리라고 한거(옵셔널 값은 가장 마지막에 입력)
     spreadCommentListFromServer(bno, page).then(result => {
         console.log(result); //result 는 PagingHandler ph(pgvo, totalCount, cmtList)
 

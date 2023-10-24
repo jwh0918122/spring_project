@@ -26,4 +26,6 @@ public interface BoardDAO {
 	List<BoardVO> getList(PagingVo pagingVO);
 
 	int getTotalCount(PagingVo pagingVO);
+
+	long selectOneBno();
 }

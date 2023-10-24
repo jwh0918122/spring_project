@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -21,25 +22,43 @@
 
 			<tr>
 				<th scope="col">BNO</th>
-				<td>${bvo.bno }</td>
+				<td>${bdto.bvo.bno }</td>
 			</tr>
 			<tr>
 				<th scope="col">WRITER</th>
-				<td>${bvo.writer }</td>
+				<td>${bdto.bvo.writer }</td>
 			</tr>
 			<tr>
 				<th scope="col">TITLE</th>
-				<td>${bvo.title }</td>
+				<td>${bdto.bvo.title }</td>
 			</tr>
 			<tr>
 				<th scope="col">CONTENT</th>
-				<td>${bvo.content }</td>
+				<td>${bdto.bvo.content }</td>
 			</tr>
 			<tr>
 				<th scope="col">REG_DATE</th>
-				<td>${bvo.regAt }</td>
+				<td>${bdto.bvo.regAt }</td>
 			</tr>
 		</table>
+		<c:forEach items="${bdto.flist}" var="fvo">
+			<c:choose>
+				<c:when test="${fvo.fileType > 0}">
+					<div>
+						<img src="/upload/${fn:replace(fvo.saveDir,'\\','/')}/${fvo.uuid}${fvo.fileName}">
+											
+					</div>
+				</c:when>
+				<c:otherwise>
+					<!-- 이미지 없은 경우 아이콘 표시 -->
+				</c:otherwise>
+			</c:choose>
+			<dir>
+				file_name : ${fvo.fileName} <br>
+				reg_date : ${fvo.regAt}<br>
+				file_size : ${fvo.fileSize} 
+			</dir>			
+		</c:forEach>
 
 		<a href="/board/modify?bno=${bvo.bno}"><button
 				class="btn btn-primary" type="button">수정</button></a> <a
@@ -68,7 +87,8 @@
 			<div>
 				<div>
 					<!-- style="visibility: hidden" <= 숨김 -->
-					<button type="button" id="moreBtn" data-page="1" class="btn btn-outline-dark" style="visibility:hidden">MORE+</button>
+					<button type="button" id="moreBtn" data-page="1"
+						class="btn btn-outline-dark" style="visibility: hidden">MORE+</button>
 				</div>
 			</div>
 

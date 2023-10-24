@@ -11,10 +11,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.myweb.www.domain.BoardDTO;
 import com.myweb.www.domain.BoardVO;
+import com.myweb.www.domain.FileVO;
 import com.myweb.www.domain.PagingVo;
+import com.myweb.www.handler.FileHandler;
 import com.myweb.www.handler.PagingHandler;
 import com.myweb.www.service.BoardService;
 
@@ -30,9 +34,11 @@ public class BoardCotroller {
 
 	private BoardService bsv;
 
+	private FileHandler fh;
 	@Autowired
-	public BoardCotroller(BoardService bsv) {
+	public BoardCotroller(BoardService bsv,FileHandler fh) {
 		this.bsv = bsv;
+		this.fh = fh;
 	}
 
 	// 글쓰기 jsp로 이동
@@ -43,10 +49,15 @@ public class BoardCotroller {
 
 	// 글등록
 	@PostMapping("/register")
-	public String write(BoardVO bvo) {
-		log.info("write 의 bvo>>> " + bvo);
-		int isOk = bsv.write(bvo);
-
+	public String write(BoardVO bvo,
+			@RequestParam(name="files", required = false)MultipartFile[] files) {
+		log.info(">>> bvo >>> files " + bvo +"  "+files);
+		List<FileVO> flist = null;
+		//file upload handler 생성
+		if(files[0].getSize()>0) {
+			flist = fh.uploadFiles(files);
+		}		
+		int isOk = bsv.write(new BoardDTO(bvo,flist));
 		return "redirect:/board/list"; // :컨트롤러에서 list로 getMapping되어있는 메서드로 이동
 	}
 
@@ -80,7 +91,13 @@ public class BoardCotroller {
 
 		log.info("detail bno>>>>>>>>>>>>>>>" + bno);
 		BoardVO bvo = bsv.detail(bno);
-		model.addAttribute("bvo", bvo);
+		List<FileVO> flist = bsv.getFileList(bno);	
+		
+		BoardDTO bdto = new BoardDTO(bvo,flist);
+		
+	
+		
+		model.addAttribute("bdto", bdto);
 		return "/board/detail";
 	}
 
