@@ -22,30 +22,31 @@
 
 			<tr>
 				<th scope="col">BNO</th>
-				<td>${bdto.bvo.bno }</td>
+				<td>${bvo.bno }</td>
 			</tr>
 			<tr>
 				<th scope="col">WRITER</th>
-				<td>${bdto.bvo.writer }</td>
+				<td>${bvo.writer }</td>
 			</tr>
 			<tr>
 				<th scope="col">TITLE</th>
-				<td>${bdto.bvo.title }</td>
+				<td>${bvo.title }</td>
 			</tr>
 			<tr>
 				<th scope="col">CONTENT</th>
-				<td>${bdto.bvo.content }</td>
+				<td>${bvo.content }</td>
 			</tr>
 			<tr>
 				<th scope="col">REG_DATE</th>
-				<td>${bdto.bvo.regAt }</td>
+				<td>${bvo.regAt }</td>
 			</tr>
 		</table>
-		<c:forEach items="${bdto.flist}" var="fvo">
+		<c:set value="${bdto.flist}" var="flist"></c:set>
+		<c:forEach items="${flist}" var="fvo">
 			<c:choose>
 				<c:when test="${fvo.fileType > 0}">
 					<div>
-						<img src="/upload/${fn:replace(fvo.saveDir,'\\','/')}/${fvo.uuid}${fvo.fileName}">
+						<img src="/upload/${fn:replace(fvo.saveDir,'\\','/')}/${fvo.uuid}_${fvo.fileName}">
 											
 					</div>
 				</c:when>
@@ -53,11 +54,11 @@
 					<!-- 이미지 없은 경우 아이콘 표시 -->
 				</c:otherwise>
 			</c:choose>
-			<dir>
+			<div>
 				file_name : ${fvo.fileName} <br>
 				reg_date : ${fvo.regAt}<br>
 				file_size : ${fvo.fileSize} 
-			</dir>			
+			</div>			
 		</c:forEach>
 
 		<a href="/board/modify?bno=${bvo.bno}"><button

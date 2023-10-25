@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,30 +11,68 @@
 <body>
 	<jsp:include page="../common/header.jsp" />
 	<jsp:include page="../common/nav.jsp" />
-	<form action="/board/modify" method="post">
+	<form action="/board/modify" method="post"
+		enctype="multipart/form-data">
 		<table class="table">
 			<tr>
 				<th scope="col">BNO</th>
-				<td><input type="number" name="bno" value="${bvo.bno}"
+				<td><input type="number" name="bno" value="${bdto.bvo.bno}"
 					readonly="readonly"></td>
 			</tr>
 			<tr>
 				<th scope="col">WRITER</th>
-				<td><input type="text" name="writer" value="${bvo.writer}"
+				<td><input type="text" name="writer" value="${bdto.bvo.writer}"
 					readonly="readonly"></td>
 			</tr>
 			<tr>
 				<th scope="col">TITLE</th>
-				<td><input type="text" name="title" value="${bvo.title}"></td>
+				<td><input type="text" name="title" value="${bdto.bvo.title}"></td>
 			</tr>
 			<tr>
 				<th scope="col">CONTENT</th>
-				<td><textarea rows="3" cols="30" name="content">${bvo.content }</textarea>
+				<td><textarea rows="3" cols="30" name="content">${bdto.bvo.content }</textarea>
 				</td>
+			</tr>
 		</table>
-		<button class="btn btn-primary" type="submit">수정 완료</button>
+		<!-- file 등록 라인 -->
+		<!-- multiple="multiple" => 파일을 여러 개 등록하기 위해 -->
+		<input type="file" class="form-control" name="files" id="files"
+			style="display: none;" multiple="multiple">
+		<!-- input button trigger  용도의 button -->
+		<button type="button" id="trigger" class="btn btn-outline-primary">File
+			Upload</button>
+		<div class="mb-3" id="fileZone">
+			<!-- 첨부파일 표시될 영역 -->
+		</div>
+		<hr>
+
+		<!-- file 삭제 라인 -->
+		<c:set value="${bdto.flist}" var="flist"></c:set>
+		<c:forEach items="${flist}" var="fvo">
+			<c:choose>
+				<c:when test="${fvo.fileType > 0}">
+					<div>
+						<img
+							src="/upload/${fn:replace(fvo.saveDir,'\\','/')}/${fvo.uuid}_th_${fvo.fileName}">
+						<button type="button" class="btn btn-primary fileDel"
+							data-uuid="${fvo.uuid}">X</button>
+					</div>
+				</c:when>
+				<c:otherwise>
+					<!-- 이미지 없은 경우 아이콘 표시 -->
+				</c:otherwise>
+			</c:choose>
+				file_name : ${fvo.fileName} <br>
+				reg_date : ${fvo.regAt}<br>
+				file_size : ${fvo.fileSize} 			
+		</c:forEach>
+
+		<button class="btn btn-primary" id="regBtn" type="submit">수정
+			완료</button>
 		<button class="btn btn-primary" type="button">리스트로</button>
 	</form>
+	<script type="text/javascript" src="/resources/js/boardModify.js"></script>
+	<script type="text/javascript" src="/resources/js/boardRegister.js"></script>
 	<jsp:include page="../common/footer.jsp" />
 </body>
 </html>

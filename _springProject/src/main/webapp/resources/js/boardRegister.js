@@ -2,8 +2,6 @@
 document.getElementById('trigger').addEventListener('click', () => {
     document.getElementById('files').click(); //files 아이디를 가지고 있는 것을 클릭
 
-
-
 });
 //실행파일, 이미지 파일에 대한 정규표현식 작성(시작은 \ 끝은 $표시)
 const regExp = new RegExp("\.(exe|sh|bat|js|msi|dll)$"); //실행파일 막기(.은 확장자 구분하는것이기 때문에)
@@ -57,6 +55,30 @@ document.addEventListener('change', (e) => { //'change' => 뭔가 변화가 생�
     }
 })
 
-// < ul class="list-group list-group-flush" >
-// <li class="list-group-item">An item</li>
-// </ul>
+//파일 삭제 함수
+async function deleteFile(uuid) {
+    try {
+        const url = "/board/fileDelete/" + uuid;
+        const config = {
+            method: 'delete'
+        }
+        const resp = await fetch(url, config);
+        const result = await resp.text();
+        return result;
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+//파일 삭제 함수 호출
+document.addEventListener('click', (e) => {
+    let div = e.target.closest('div');
+    let delBtn = div.querySelector('.fileDel');
+    let uuid = delBtn.dataset.uuid;
+    console.log("div :", div);
+    console.log("delBtn :", delBtn);
+    console.log("uuid :", uuid);
+
+    deleteFile(uuid);
+    location.reload();
+})

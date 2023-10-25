@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import com.myweb.www.domain.BoardDTO;
 import com.myweb.www.domain.BoardVO;
 import com.myweb.www.domain.PagingVo;
 
@@ -17,7 +18,7 @@ public interface BoardDAO {
 
 	int update(BoardVO bvo);
 
-	BoardVO SelectOneForModify(long bno);
+//	BoardVO SelectOneForModify(long bno);
 
 	int delete(long bno);
 
@@ -28,4 +29,8 @@ public interface BoardDAO {
 	int getTotalCount(PagingVo pagingVO);
 
 	long selectOneBno();
+
+	void updateCmtQty();
+
+	void updateFileCnt();
 }

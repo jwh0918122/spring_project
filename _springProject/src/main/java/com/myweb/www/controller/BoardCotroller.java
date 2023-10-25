@@ -1,12 +1,16 @@
 package com.myweb.www.controller;
 
-import java.lang.ProcessBuilder.Redirect;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,8 +39,9 @@ public class BoardCotroller {
 	private BoardService bsv;
 
 	private FileHandler fh;
+
 	@Autowired
-	public BoardCotroller(BoardService bsv,FileHandler fh) {
+	public BoardCotroller(BoardService bsv, FileHandler fh) {
 		this.bsv = bsv;
 		this.fh = fh;
 	}
@@ -49,15 +54,14 @@ public class BoardCotroller {
 
 	// 글등록
 	@PostMapping("/register")
-	public String write(BoardVO bvo,
-			@RequestParam(name="files", required = false)MultipartFile[] files) {
-		log.info(">>> bvo >>> files " + bvo +"  "+files);
+	public String write(BoardVO bvo, @RequestParam(name = "files", required = false) MultipartFile[] files) {
+		log.info(">>> bvo >>> files " + bvo + "  " + files);
 		List<FileVO> flist = null;
-		//file upload handler 생성
-		if(files[0].getSize()>0) {
+		// file upload handler 생성
+		if (files[0].getSize() > 0) {
 			flist = fh.uploadFiles(files);
-		}		
-		int isOk = bsv.write(new BoardDTO(bvo,flist));
+		}
+		int isOk = bsv.write(new BoardDTO(bvo, flist));
 		return "redirect:/board/list"; // :컨트롤러에서 list로 getMapping되어있는 메서드로 이동
 	}
 
@@ -88,15 +92,12 @@ public class BoardCotroller {
 	// bvo 가지고 디테일 jsp 이동
 	@GetMapping("/detail")
 	public String detail(Model model, @RequestParam("bno") long bno) {
-
-		log.info("detail bno>>>>>>>>>>>>>>>" + bno);
 		BoardVO bvo = bsv.detail(bno);
-		List<FileVO> flist = bsv.getFileList(bno);	
-		
-		BoardDTO bdto = new BoardDTO(bvo,flist);
-		
-	
-		
+		List<FileVO> flist = bsv.getFileList(bno);
+
+		BoardDTO bdto = new BoardDTO(bvo, flist);
+
+		model.addAttribute("bvo", bdto.getBvo());
 		model.addAttribute("bdto", bdto);
 		return "/board/detail";
 	}
@@ -104,19 +105,34 @@ public class BoardCotroller {
 	// bno로 bvo찾은다음 model에 담아서 수정 페이지로 이동
 	@GetMapping("/modify")
 	public String modify(Model model, @RequestParam("bno") long bno) {
-		BoardVO bvo = bsv.SelectOneForModify(bno);
-		model.addAttribute("bvo", bvo);
+		BoardVO bvo = bsv.detail(bno);
+		List<FileVO> flist = bsv.getFileList(bno);
+
+		BoardDTO bdto = new BoardDTO(bvo, flist);
+
+		model.addAttribute("bdto", bdto);
 		return "/board/modify";
 	}
 
 	// 수정
 	@PostMapping("/modify")
-	public String modify(BoardVO bvo, RedirectAttributes red) {
+	public String modify(BoardVO bvo,RedirectAttributes red,
+			@RequestParam(name="files", required = false) MultipartFile[] files) {
 		int isOk = bsv.modify(bvo);
+		
+		List<FileVO> flist = null;
+		if(files[0].getSize()>0) {
+			flist=fh.uploadFiles(files);
+			
+			for(FileVO fvo : flist) {
+				fvo.setBno(bvo.getBno());
+			}
+			
+		int modIsOk = bsv.modifyFile(flist);
+		}
 
-		red.addFlashAttribute("bno", bvo.getBno());
-//		위와 같이 하면 return "redirect:/board/detail?bno="+bvo.getBno(); 하는 거와 같음
-		red.addFlashAttribute("isOk", isOk);
+//		이렇게 하면 return "redirect:/board/detail?bno="+bvo.getBno(); 하는 거와 같음
+		red.addAttribute("bno", bvo.getBno());
 		return "redirect:/board/detail";
 	}
 
@@ -126,5 +142,14 @@ public class BoardCotroller {
 		int reisOk = bsv.remove(bno);
 		red.addFlashAttribute("reisOk", reisOk);
 		return "redirect:/board/list";
+	}
+
+	// 파일 삭제
+	@DeleteMapping("/fileDelete/{uuid}")
+	public ResponseEntity<String> fileDelete(@PathVariable("uuid") String uuid) {
+		int isOk = bsv.fileDelete(uuid);
+		return isOk > 0 ? new ResponseEntity<String>("1", HttpStatus.OK)
+				: new ResponseEntity<String>("0", HttpStatus.INTERNAL_SERVER_ERROR);
+
 	}
 }

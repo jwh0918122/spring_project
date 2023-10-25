@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.myweb.www.domain.BoardDTO;
 import com.myweb.www.domain.BoardVO;
@@ -18,17 +20,17 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
-public class BoardServiceImpl implements BoardService{
+public class BoardServiceImpl implements BoardService {
 	private BoardDAO bdao;
 	private CommentService csv;
 	private FileDAO fdao;
 
 	@Autowired
-	public BoardServiceImpl(BoardDAO bdao,CommentService csv,FileDAO fdao) {
-		this.bdao=bdao;
-		this.csv=csv;
-		this.fdao=fdao;
-	
+	public BoardServiceImpl(BoardDAO bdao, CommentService csv, FileDAO fdao) {
+		this.bdao = bdao;
+		this.csv = csv;
+		this.fdao = fdao;
+
 	}
 
 //	@Override
@@ -52,20 +54,27 @@ public class BoardServiceImpl implements BoardService{
 		return bdao.update(bvo);
 	}
 
-	@Override
-	public BoardVO SelectOneForModify(long bno) {
-		return bdao.SelectOneForModify(bno);
-	}
+//	@Override
+//	public BoardVO SelectOneForModify(long bno) {	
+//		return bdao.SelectOneForModify(bno);
+//	}
 
 	@Override
-	public int remove(long bno) {		
-		csv.deleteCommentAll(bno);//게시글 지우기전 댓글 먼저 지우기
+	public int remove(long bno) {
+		csv.deleteCommentAll(bno);// 게시글 지우기전 댓글 먼저 지우기
 		return bdao.delete(bno);
 	}
 
 	@Override
 	public List<BoardVO> getList(PagingVo pagingVO) {
-		return bdao.getList(pagingVO);
+		//파일 수
+		bdao.updateFileCnt();
+		
+		//댓글 수
+		bdao.updateCmtQty();
+
+		List<BoardVO> list = bdao.getList(pagingVO);
+		return list;
 	}
 
 	@Override
@@ -75,29 +84,50 @@ public class BoardServiceImpl implements BoardService{
 
 	@Override
 	public int write(BoardDTO bdto) {
-		/*bvo, flist 가져와서 각자 db에 저장*/
-		
-		//기존 메서드 활용
-		int isUp = bdao.insert(bdto.getBvo()); //bno 등록
-		
-		if(bdto.getFlist()==null) {
+		/* bvo, flist 가져와서 각자 db에 저장 */
+
+		// 기존 메서드 활용
+		int isUp = bdao.insert(bdto.getBvo()); // bno 등록
+
+		if (bdto.getFlist() == null) {
 			return isUp;
-		}else if (isUp>0 && bdto.getFlist().size()>0) {//bvo가 잘 등록되었고, 등록할 파일이 존재 한다면
-			long bno = bdao.selectOneBno(); //가장 마지막에 등록된 bno(방금 등록된)
-		
-			//모든 파일에 bno를 세팅
-			for(FileVO fvo : bdto.getFlist()) {
+		} else if (isUp > 0 && bdto.getFlist().size() > 0) {// bvo가 잘 등록되었고, 등록할 파일이 존재 한다면
+			long bno = bdao.selectOneBno(); // 가장 마지막에 등록된 bno(방금 등록된)
+
+			// 모든 파일에 bno를 세팅
+			for (FileVO fvo : bdto.getFlist()) {
 				fvo.setBno(bno);
-				isUp*=fdao.insertFile(fvo);
+				isUp *= fdao.insertFile(fvo);
 			}
 		}
-		
+
 		return isUp;
 	}
 
 	@Override
 	public List<FileVO> getFileList(long bno) {
 		return fdao.getFileList(bno);
+	}
+
+	// 수정에서 파일 삭제 버튼
+	@Override
+	public int fileDelete(String uuid) {
+		return fdao.fileDelete(uuid);
+	}
+
+	// 수정에서 파일 다시 등록
+	@Override
+	public int modifyFile(List<FileVO> flist) {
+
+		if (flist == null) {
+			return 0;
+		} else if (flist.size() > 0) {
+			for (FileVO fvo : flist) {
+				fdao.insertFile(fvo);
+			}
+		}
+		return 1;
+
 	}
 
 }

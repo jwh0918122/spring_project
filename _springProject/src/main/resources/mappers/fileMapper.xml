@@ -9,8 +9,14 @@
 		values(#{uuid},#{saveDir},#{fileName},#{fileType},#{bno},#{fileSize})
 	</insert>
 	<select id="getFileList" resultType="com.myweb.www.domain.FileVO">
-	select * from file where bno=#{bno}
+	select * from file where bno=#{bno} order by reg_at desc
 	</select>
+	<select id="fileCount" resultType="int">
+	select count(*) from file where bno=#{bno}
+	</select>
+	<delete id="fileDelete">
+	delete from file where uuid=#{uuid}
+	</delete>
 
 
 </mapper>

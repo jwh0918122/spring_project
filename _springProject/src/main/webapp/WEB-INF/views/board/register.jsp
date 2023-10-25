@@ -36,7 +36,7 @@
   <button type="submit" class="btn btn-primary" id="regBtn">등록</button>
 
 </form>
-<jsp:include page="../common/footer.jsp"/>
 <script type="text/javascript" src="/resources/js/boardRegister.js"></script>
+<jsp:include page="../common/footer.jsp"/>
 </body>
 </html>
