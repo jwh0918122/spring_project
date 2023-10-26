@@ -4,7 +4,7 @@ async function deleteFile(uuid) {
         const url = "/board/fileDelete/" + uuid;
         const config = {
             method: 'delete'
-        }
+        };
         const resp = await fetch(url, config);
         const result = await resp.text();
         return result;
@@ -25,3 +25,19 @@ document.addEventListener('click', (e) => {
     deleteFile(uuid);
     location.reload();
 })
+
+
+// - 강사님
+//파일 삭제 함수 호출
+// document.addEventListener('click', (e) => {
+//     if (e.target.classList.contains('fileDel')) {
+//         deleteFile(e.target.dataset.uuid).then(result => {
+//             console.log(result);
+//             alert('파일 삭제' + (parseInt(result) > 0)? '완료' : '실패');
+//             if (parseInt(result)) { //result가 1이면 
+//                 e.target.closest('div').remove();
+//                 location.reload(); //새로고침
+//             }
+//         })
+//     }
+// })

@@ -11,8 +11,7 @@
 <body>
 	<jsp:include page="../common/header.jsp" />
 	<jsp:include page="../common/nav.jsp" />
-	<form action="/board/modify" method="post"
-		enctype="multipart/form-data">
+	<form action="/board/modify" method="post" enctype="multipart/form-data">
 		<table class="table">
 			<tr>
 				<th scope="col">BNO</th>
@@ -34,19 +33,18 @@
 				</td>
 			</tr>
 		</table>
-		<!-- file 등록 라인 -->
-		<!-- multiple="multiple" => 파일을 여러 개 등록하기 위해 -->
+		<!-- 새 파일 등록 -->
 		<input type="file" class="form-control" name="files" id="files"
 			style="display: none;" multiple="multiple">
 		<!-- input button trigger  용도의 button -->
 		<button type="button" id="trigger" class="btn btn-outline-primary">File
 			Upload</button>
 		<div class="mb-3" id="fileZone">
-			<!-- 첨부파일 표시될 영역 -->
+			<!-- 새 파일 표시될 영역 -->
 		</div>
 		<hr>
 
-		<!-- file 삭제 라인 -->
+		<!-- 파일 삭제 -->
 		<c:set value="${bdto.flist}" var="flist"></c:set>
 		<c:forEach items="${flist}" var="fvo">
 			<c:choose>
@@ -67,9 +65,10 @@
 				file_size : ${fvo.fileSize} 			
 		</c:forEach>
 
+<hr>
 		<button class="btn btn-primary" id="regBtn" type="submit">수정
 			완료</button>
-		<button class="btn btn-primary" type="button">리스트로</button>
+		<a href="/board/list"><button class="btn btn-primary" type="button">리스트로</button></a>
 	</form>
 	<script type="text/javascript" src="/resources/js/boardModify.js"></script>
 	<script type="text/javascript" src="/resources/js/boardRegister.js"></script>

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.myweb.www.domain.CommentVO;
 import com.myweb.www.domain.PagingVo;
@@ -46,7 +47,8 @@ public class CommentServiceImpl implements CommentService{
 	public int modify(CommentVO cvo) {
 		return cdao.update(cvo);
 	}
-
+	
+	@Transactional
 	@Override
 	public PagingHandler getList(long bno, PagingVo pgvo) {
 		// totalCount 구하기

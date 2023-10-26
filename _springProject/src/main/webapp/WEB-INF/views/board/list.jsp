@@ -69,6 +69,7 @@ justify-content: center;
 					<th scope="col">READ_CNT</th>
 					<th scope="col">CMT_CNT</th>
 					<th scope="col">FILE_CNT</th>
+					<th scope="col">MOD_DATE</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -78,9 +79,10 @@ justify-content: center;
 						<th><a href="/board/detail?bno=${bvo.bno}">${bvo.bno }</a></th>
 						<td><a href="/board/detail?bno=${bvo.bno}">${bvo.writer }</a></td>
 						<td><a href="/board/detail?bno=${bvo.bno}">${bvo.title }</a></td>
-						<td><a href="/board/detail?bno=${bvo.bno}">${bvo.readCount }</a></td>
-						<td><a href="/board/detail?bno=${bvo.bno}">${bvo.cmtQty }</a></td>
-						<td><a href="/board/detail?bno=${bvo.bno}">${bvo.hasFile }</a></td>
+						<td>${bvo.readCount }</td>
+						<td>${bvo.cmtQty }</td>
+						<td>${bvo.hasFile }</td>
+						<td>${bvo.regAt }</td>
 
 					</tr>
 				</c:forEach>

@@ -17,7 +17,7 @@ public interface BoardService {
 
 	BoardVO detail(long bno);
 
-	int modify(BoardVO bvo);
+	int modify(BoardDTO bdto);
 
 //	BoardVO SelectOneForModify(long bno);
 
@@ -33,7 +33,6 @@ public interface BoardService {
 
 	int fileDelete(String uuid);
 
-	int modifyFile(List<FileVO> flist);
 
 
 

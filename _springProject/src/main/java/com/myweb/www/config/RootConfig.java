@@ -11,13 +11,21 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
+
 @Configuration
-@MapperScan(basePackages = { "com.myweb.www.repository" })
-@ComponentScan(basePackages = { "com.myweb.www.service" })
+@MapperScan(basePackages = { "com.myweb.www.repository"})
+@ComponentScan(basePackages = { "com.myweb.www.service","com.myweb.www.handler"})
+@EnableAspectJAutoProxy
+@EnableTransactionManagement
+@EnableScheduling
 public class RootConfig {
 	// 매퍼, db라인에 대한 설정
 
@@ -68,5 +76,11 @@ public class RootConfig {
 				applicationContext.getResource("classpath:/MybatisConfig.xml"));
 		
 		return (SqlSessionFactory)sqlFactoryBean.getObject();
+	}
+	
+	//트랜젝션매니저 빈 설정
+	@Bean
+	public DataSourceTransactionManager transactionManager() {
+		return new DataSourceTransactionManager(dataSource());
 	}
 }

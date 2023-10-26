@@ -5,18 +5,27 @@
 <mapper namespace="com.myweb.www.repository.FileDAO">
 
 	<insert id="insertFile">
-		insert into file(uuid,save_dir,file_name,file_type,bno,file_size)
+		insert into
+		file(uuid,save_dir,file_name,file_type,bno,file_size)
 		values(#{uuid},#{saveDir},#{fileName},#{fileType},#{bno},#{fileSize})
 	</insert>
-	<select id="getFileList" resultType="com.myweb.www.domain.FileVO">
-	select * from file where bno=#{bno} order by reg_at desc
+	<select id="getFileList"
+		resultType="com.myweb.www.domain.FileVO">
+		select * from file where bno=#{bno} order by reg_at desc
 	</select>
 	<select id="fileCount" resultType="int">
-	select count(*) from file where bno=#{bno}
+		select count(*) from file where bno=#{bno}
 	</select>
 	<delete id="fileDelete">
-	delete from file where uuid=#{uuid}
+		delete from file where uuid=#{uuid}
 	</delete>
+	<delete id="deleteFileAll">
+		delete from file where bno=#{bno}
+	</delete>
+	<select id="selectListAllFiles"
+		resultType="com.myweb.www.domain.FileVO">
+		select * from file;
+	</select>
 
 
 </mapper>

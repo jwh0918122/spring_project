@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -118,18 +119,12 @@ public class BoardCotroller {
 	@PostMapping("/modify")
 	public String modify(BoardVO bvo,RedirectAttributes red,
 			@RequestParam(name="files", required = false) MultipartFile[] files) {
-		int isOk = bsv.modify(bvo);
 		
 		List<FileVO> flist = null;
-		if(files[0].getSize()>0) {
+		if(files[0].getSize()>0) { //files 0번지 배열에 파일이 있다면 
 			flist=fh.uploadFiles(files);
-			
-			for(FileVO fvo : flist) {
-				fvo.setBno(bvo.getBno());
-			}
-			
-		int modIsOk = bsv.modifyFile(flist);
 		}
+		int isOk = bsv.modify(new BoardDTO(bvo, flist));
 
 //		이렇게 하면 return "redirect:/board/detail?bno="+bvo.getBno(); 하는 거와 같음
 		red.addAttribute("bno", bvo.getBno());
@@ -145,7 +140,7 @@ public class BoardCotroller {
 	}
 
 	// 파일 삭제
-	@DeleteMapping("/fileDelete/{uuid}")
+	@DeleteMapping(value="/fileDelete/{uuid}",produces = MediaType.TEXT_PLAIN_VALUE)
 	public ResponseEntity<String> fileDelete(@PathVariable("uuid") String uuid) {
 		int isOk = bsv.fileDelete(uuid);
 		return isOk > 0 ? new ResponseEntity<String>("1", HttpStatus.OK)
