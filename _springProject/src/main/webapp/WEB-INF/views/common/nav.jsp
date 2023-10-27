@@ -28,6 +28,15 @@ width: 100%;
           <a class="nav-link active" aria-current="page" href="/">Home</a>
         </li>
         <li class="nav-item">
+          <a class="nav-link" href="/member/register">SignUp</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/member/login">LogIn</a> 
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/member/logout">LogOut</a> 
+        </li>
+        <li class="nav-item">
           <a class="nav-link" href="/board/list">Board List</a>
         </li>
         <li class="nav-item">

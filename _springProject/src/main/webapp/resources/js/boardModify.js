@@ -31,7 +31,7 @@ document.addEventListener('click', (e) => {
 //파일 삭제 함수 호출
 // document.addEventListener('click', (e) => {
 //     if (e.target.classList.contains('fileDel')) {
-//         deleteFile(e.target.dataset.uuid).then(result => {
+//         deleteFile(e.target.dataset.uuid).then(result => {   
 //             console.log(result);
 //             alert('파일 삭제' + (parseInt(result) > 0)? '완료' : '실패');
 //             if (parseInt(result)) { //result가 1이면 
