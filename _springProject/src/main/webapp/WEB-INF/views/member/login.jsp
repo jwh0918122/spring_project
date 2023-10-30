@@ -16,15 +16,14 @@ form {
 	display: flex;
 	justify-content: center;
 }
-
 </style>
 </head>
 <body>
-	<jsp:include page="../common/header.jsp" />	
+	<jsp:include page="../common/header.jsp" />
 	<jsp:include page="../common/nav.jsp" />
 
 
-<h2 style="text-align: center;">LogIn Page</h2>
+	<h2 style="text-align: center;">LogIn Page</h2>
 	<form action="/member/login" method="post">
 		<div class="boxs">
 			<div class="mb-3">
@@ -37,14 +36,27 @@ form {
 				<input type="text" class="form-control" name="pwd"
 					id="exampleFormControlInput1">
 			</div>
+			<c:if test="${not empty param.errMsg}">
+				<div class="text-danger mb-3">
+					<c:choose>
+						<c:when test="${param.errMsg eq 'Bad credentials'}">
+							<c:set var="errText" value="비밀번호가 일치하지 않습니다." />
+						</c:when>
+						<c:otherwise>
+							<c:set var="errText" value="이메일을 확인해주세요." />
+						</c:otherwise>
+					</c:choose>
+					${errText}
+					${param.errMsg }
+				</div>
+			</c:if>
+
+
 			<div class="box2">
 				<button type="submit" class="btn btn-primary">LogIn</button>
 			</div>
 		</div>
 	</form>
-
-
-
 	<jsp:include page="../common/footer.jsp" />
 </body>
 </html>

@@ -72,12 +72,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		.usernameParameter("email") //usernameParameter은 id에 해당하는거(email을 id로 사용할거임)
 		.passwordParameter("pwd")
 		.loginPage("/member/login") //Controller에 주소요청 맵핑도 같이 꼭 적어줘야 함.
-		.successHandler(authSuccessHandler()) //성공 시 authSuccessHandler메서드 탐
-		.failureHandler(authFailureHandler()); //실패 시 authFailureHandler메서드 탐
+		.successHandler(authSuccessHandler()) //성공 시 authSuccessHandler메서드 타라
+		.failureHandler(authFailureHandler()); //실패 시 authFailureHandler메서드 타라
 		
 		//로그아웃 페이지
 		http.logout()
-		.logoutUrl("/member/logout")
+		.logoutUrl("/member/logout") //반드시 method="post"(nav.jsp에 있음)
 		.invalidateHttpSession(true) //기존 세션 아이디를 끊을 것인지 여부
 		.deleteCookies("JSESSIONID") //쿠키도 지워줌
 		.logoutSuccessUrl("/"); //로그아웃 완료 후 이동할 url

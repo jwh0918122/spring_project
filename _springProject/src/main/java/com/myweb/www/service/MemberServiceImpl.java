@@ -6,11 +6,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.myweb.www.repository.MemberDAO;
 import com.myweb.www.security.MemberVO;
 
-
-
 @Service
-public class MemberServiceImpl implements MemberService{
-	
+public class MemberServiceImpl implements MemberService {
+
 	private MemberDAO mdao;
 
 	public MemberServiceImpl(MemberDAO mdao) {
@@ -20,13 +18,14 @@ public class MemberServiceImpl implements MemberService{
 	@Transactional
 	@Override
 	public int register(MemberVO mvo) {
-		int isOk =mdao.insert(mvo); //회원 등록
-		return mdao.insertAuthInit(mvo.getEmail()); //권한 주기 
+		int isOk = mdao.insert(mvo); // 회원 등록
+		return mdao.insertAuthInit(mvo.getEmail()); // 권한 주기
 	}
-	
-	
 
+	@Override
+	public boolean updateLastLogin(String authEmail) {
 
-	
-	
+		return mdao.updateLastLogin(authEmail) > 0 ? true : false;
+	}
+
 }

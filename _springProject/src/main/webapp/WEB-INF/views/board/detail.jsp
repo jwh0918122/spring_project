@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -17,6 +18,8 @@
 <body>
 	<jsp:include page="../common/header.jsp" />
 	<jsp:include page="../common/nav.jsp" />
+ 
+
 	<div class="bigBox">
 		<table class="table">
 
@@ -46,8 +49,7 @@
 			<c:choose>
 				<c:when test="${fvo.fileType > 0}">
 					<div>
-						<img src="/upload/${fn:replace(fvo.saveDir,'\\','/')}/${fvo.uuid}_${fvo.fileName}">
-											
+						<img src="/upload/${fn:replace(fvo.saveDir,'\\','/')}/${fvo.uuid}_${fvo.fileName}">											
 					</div>
 				</c:when>
 				<c:otherwise>
@@ -60,26 +62,28 @@
 				file_size : ${fvo.fileSize} 
 			</div>			
 		</c:forEach>
-
-		<a href="/board/modify?bno=${bvo.bno}"><button
-				class="btn btn-primary" type="button">수정</button></a> <a
-			href="/board/remove?bno=${bvo.bno}"><button
-				class="btn btn-primary" type="button">삭제</button></a> <a
-			href="/board/list"><button class="btn btn-primary" type="button">리스트로</button></a>
-
+		<sec:authorize access="isAuthenticated()">
+		<sec:authentication property="principal.mvo.email" var="authEmail"/>
+		<c:if test="${authEmail eq bvo.writer}">
+		<a href="/board/modify?bno=${bvo.bno}"><button class="btn btn-primary" type="button">수정</button></a> 
+		</c:if>
+		</sec:authorize>
+		<a href="/board/remove?bno=${bvo.bno}"><button class="btn btn-primary" type="button">삭제</button></a> 
+		<a href="/board/list"><button class="btn btn-primary" type="button">리스트로</button></a>
 		<hr>
 		<!-- 댓글 라인 -->
 		<div>
-			<!-- 댓글 등록 라인 -->
-			<div class="input-group mb-3">
-				<span class="input-group-text" id="cmtWriter">${bvo.writer}</span> <input
-					type="text" class="form-control" id="cmtText"
-					placeholder="Test Comment">
-				<button class="btn btn-primary" id="cmtPostBtn" type="button">댓글
-					등록</button>
+			<!-- 댓글 등록 라인(로그인 했을 때만(권한 있을 때만)) -->		
+			<!-- SecurityConfig에서 permitAll부분에 /comment/** 대신(/comment/list로 하면 밑에처럼 안해도 됨) -->	
+			<sec:authorize access="isAuthenticated()">
+ 			<sec:authentication property="principal.mvo.email" var="authEmail"/>			
+			<div class="input-group mb-3">		
+			<span class="input-group-text" id="cmtWriter">${authEmail}</span>
+			<input type="text" class="form-control" id="cmtText" placeholder="Test Comment">
+			<button class="btn btn-primary" id="cmtPostBtn" type="button">댓글 등록</button>
 			</div>
-
-
+			</sec:authorize>
+											
 			<!-- 댓글 표시 라인 -->
 			<ul class="list-group list-group-flush" id="cmtListArea">
 			</ul>
@@ -88,8 +92,7 @@
 			<div>
 				<div>
 					<!-- style="visibility: hidden" <= 숨김 -->
-					<button type="button" id="moreBtn" data-page="1"
-						class="btn btn-outline-dark" style="visibility: hidden">MORE+</button>
+					<button type="button" id="moreBtn" data-page="1" class="btn btn-outline-dark" style="visibility: hidden">MORE+</button>
 				</div>
 			</div>
 
@@ -99,28 +102,26 @@
 					<div class="modal-content">
 						<div class="modal-header">
 							<h5 class="modal-title">Writer</h5>
-							<button type="button" class="btn-close" data-bs-dismiss="modal"
-								aria-label="Close"></button>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 						</div>
 
 						<div class="modal-body">
+						
 							<div class="input-group mb-3">
-								<input type="text" class="form-control" id="cmtTextModal"
-									placeholder="Test Comment">
+								<input type="text" class="form-control" id="cmtTextModal" placeholder="Test Comment">
 								<button class="btn btn-primary" id="cmtModBtn" type="button">수정</button>
 							</div>
+						
 
 							<div class="modal-footer">
-								<button type="button" class="btn btn-secondary"
-									data-bs-dismiss="modal">Close</button>
-
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-
 		</div>
+
 		<script type="text/javascript">
 			let bnoVal = `<c:out value="${bvo.bno}"/>`;
 			console.log("bnoVal>>> " + bnoVal);
