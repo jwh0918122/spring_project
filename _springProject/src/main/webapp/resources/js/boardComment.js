@@ -1,4 +1,5 @@
 console.log("bnoVal2>>> ", bnoVal);
+console.log("authEmail>>> ", authEmail);
 
 //댓글 등록 함수 보내는 함수
 async function postComment(cmtData) {
@@ -24,11 +25,11 @@ async function postComment(cmtData) {
 //댓글 등록 함수 호출해서 등록
 document.getElementById("cmtPostBtn").addEventListener('click', () => {
     const cmtText = document.getElementById("cmtText").value;
-    const cmtWriter = document.getElementById("cmtWriter").innerText;
+    const authEmail = document.getElementById("cmtWriter").innerText;
 
     let cmtData = {
         bno: bnoVal,
-        writer: cmtWriter,
+        writer: authEmail,
         content: cmtText
     }
 
@@ -69,7 +70,6 @@ function printCommentList(bno, page = 1) { //page=1인거는 처음 뿌릴 때�
 
         const ul = document.getElementById("cmtListArea");
         if (result.cmtList.length > 0) {
-
             //다시 댓글을 뿌릴 때 기존 값 삭제 1page 경우
             if (page == 1) {
                 ul.innerText = "";
@@ -83,8 +83,12 @@ function printCommentList(bno, page = 1) { //page=1인거는 처음 뿌릴 때�
                 // str += `<input type="text" id="cmtTextMod" value="${cvo.content}" class="form-control">`;
                 str += `</div>`;
                 str += `<span class="badge rounded-pill text-bg-secondary">${cvo.modAt}</span>`;
-                str += `<div><button type="button" class="modBtn btn btn-warning" data-bs-toggle="modal" data-bs-target="#myModal">수정</button>`;
-                str += `<button type="button" class="delBtn btn btn-warning"">삭제</button></div></li>`;
+                str += `<div>`;
+                if (cvo.writer == authEmail) {
+                    str += `<button type="button" class="modBtn btn btn-warning" data-bs-toggle="modal" data-bs-target="#myModal">수정</button>`;
+                    str += `<button type="button" class="delBtn btn btn-warning"">삭제</button>`;
+                }
+                str += `</div></li>`;
             }
             ul.innerHTML += str;
             //str += `</ul>`;
@@ -144,10 +148,13 @@ async function editCommentToServer(cmtDataMod) {
 document.addEventListener('click', (e) => {
     // let writer = li.dataset.writer;
     // let content = li.querySelecter('#cmtTextMod');
+    // let authEmail = document.getElementById("cmtWriter").innerText; //로그인한 이메일
+
 
     //삭제
     if (e.target.classList.contains('delBtn')) {
         let li = e.target.closest('li');
+        // let writer = li.dataset.writer; //작성자
         let cno = li.dataset.cno;
         remove(cno).then(result => {
             if (result > 0) {
@@ -159,9 +166,14 @@ document.addEventListener('click', (e) => {
             printCommentList(bnoVal);
             document.getElementById('cmtText').focus();
         })
+
+
+
         //수정
     } else if (e.target.classList.contains('modBtn')) {
         let li = e.target.closest('li');
+        // let writer = li.dataset.writer; //작성자
+
         //nextSibling() : 같은 부모의 다음 형제 객체를 반환 => ${cvo.content}
         let cmtText = li.querySelector('.fw-bold').nextSibling;
 
@@ -169,6 +181,8 @@ document.addEventListener('click', (e) => {
         document.getElementById('cmtTextModal').value = cmtText.nodeValue;
         //cmtModBtn에 data-cno 달기
         document.getElementById('cmtModBtn').setAttribute('data-cno', li.dataset.cno);
+
+
     } else if (e.target.id == 'cmtModBtn') {
         let cmtDataMod = {
             cno: e.target.dataset.cno,
@@ -190,7 +204,6 @@ document.addEventListener('click', (e) => {
     }
 
 })
-
 // str += ` <li class="list-group-item" data-cno="${cvo.cno}" data-writer="${cvo.writer}">`;
 // str += `<div>`;
 // str += `<div>${cvo.writer}</div>Content`;

@@ -64,6 +64,11 @@
 		</c:forEach>
 		<sec:authorize access="isAuthenticated()">
 		<sec:authentication property="principal.mvo.email" var="authEmail"/>
+		<script type="text/javascript">		
+		let authEmail = <c:out value="${authEmail}"/>
+		console.log("authEmail>>> " + authEmail);
+		</script>
+				
 		<c:if test="${authEmail eq bvo.writer}">
 		<a href="/board/modify?bno=${bvo.bno}"><button class="btn btn-primary" type="button">수정</button></a> 
 		</c:if>
@@ -78,7 +83,7 @@
 			<sec:authorize access="isAuthenticated()">
  			<sec:authentication property="principal.mvo.email" var="authEmail"/>			
 			<div class="input-group mb-3">		
-			<span class="input-group-text" id="cmtWriter">${authEmail}</span>
+			<span class="input-group-text" id="cmtWriter">${authEmail}</span>		
 			<input type="text" class="form-control" id="cmtText" placeholder="Test Comment">
 			<button class="btn btn-primary" id="cmtPostBtn" type="button">댓글 등록</button>
 			</div>
@@ -106,12 +111,11 @@
 						</div>
 
 						<div class="modal-body">
-						
+								
 							<div class="input-group mb-3">
 								<input type="text" class="form-control" id="cmtTextModal" placeholder="Test Comment">
 								<button class="btn btn-primary" id="cmtModBtn" type="button">수정</button>
 							</div>
-						
 
 							<div class="modal-footer">
 								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

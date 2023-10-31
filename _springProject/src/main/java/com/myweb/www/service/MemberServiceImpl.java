@@ -1,9 +1,12 @@
 package com.myweb.www.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.myweb.www.repository.MemberDAO;
+import com.myweb.www.security.AuthVO;
 import com.myweb.www.security.MemberVO;
 
 @Service
@@ -26,6 +29,31 @@ public class MemberServiceImpl implements MemberService {
 	public boolean updateLastLogin(String authEmail) {
 
 		return mdao.updateLastLogin(authEmail) > 0 ? true : false;
+	}
+
+	@Override
+	public List<MemberVO> getList() {
+		return mdao.selectAll();
+	}
+
+	@Override
+	public MemberVO getDetail(String email) {
+		return mdao.selectOne(email);
+	}
+
+	@Override
+	public List<AuthVO> getAuthList(String email) {
+		return mdao.selectAuths(email);
+	}
+
+	@Override
+	public int Modify(MemberVO mvo) {
+		return mdao.memberUpdate(mvo);
+	}
+
+	@Override
+	public MemberVO adminModifyMvo(String email) {
+		return mdao.selectOneModify(email);
 	}
 
 }

@@ -35,6 +35,8 @@ public class CommentServiceImpl implements CommentService{
 
 	@Override
 	public int remove(long cno) {
+		
+		
 		return cdao.delete(cno);
 	}
 
@@ -59,6 +61,11 @@ public class CommentServiceImpl implements CommentService{
 		PagingHandler ph = new PagingHandler(pgvo, totalCount,list);
 		
 		return ph;
+	}
+
+	@Override
+	public CommentVO getCvo(long cno) {
+		return cdao.getCvo(cno);
 	}
 
 

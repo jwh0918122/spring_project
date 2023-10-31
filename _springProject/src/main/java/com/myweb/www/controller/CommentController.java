@@ -3,6 +3,7 @@ package com.myweb.www.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,18 +47,19 @@ public class CommentController {
 
 	// 댓글 리스트 출력
 	@GetMapping(value = "/list/{bno}/{page}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<PagingHandler> list(@PathVariable("bno") long bno,@PathVariable("page") int page) {
-		log.info(">>>>>>> bno / page >>> "+bno +"  "+page);
-		PagingVo pgvo = new PagingVo(page,5); //qty=5
-		PagingHandler list = csv.getList(bno,pgvo);
-		log.info(">>>>>>>>>>>>>> ph List >>>>"+list);
+	public ResponseEntity<PagingHandler> list(@PathVariable("bno") long bno, @PathVariable("page") int page) {
+		log.info(">>>>>>> bno / page >>> " + bno + "  " + page);
+		PagingVo pgvo = new PagingVo(page, 5); // qty=5
+		PagingHandler list = csv.getList(bno, pgvo);
+		log.info(">>>>>>>>>>>>>> ph List >>>>" + list);
 		return new ResponseEntity<PagingHandler>(list, HttpStatus.OK);
 
 	}
 
 	// 댓글 삭제
 	@DeleteMapping(value = "/remove/{cno}", produces = MediaType.TEXT_PLAIN_VALUE)
-	public ResponseEntity<String> remove(@PathVariable("cno") long cno) {
+	public ResponseEntity<String> remove(@PathVariable("cno") long cno, Principal principal) {
+
 		int isOk = csv.remove(cno);
 
 		return isOk > 0 ? new ResponseEntity<String>("1", HttpStatus.OK)
@@ -67,9 +69,10 @@ public class CommentController {
 
 	// 댓글 수정(모달창)
 	@PutMapping(value = "/modify", consumes = "application/json", produces = MediaType.TEXT_PLAIN_VALUE)
-	public ResponseEntity<String> modify(@RequestBody CommentVO cvo) {
+	public ResponseEntity<String> modify(@RequestBody CommentVO cvo, Principal principal) {
+
 		int isOk = csv.modify(cvo);
-		
+
 		return isOk > 0 ? new ResponseEntity<String>("1", HttpStatus.OK)
 				: new ResponseEntity<String>("0", HttpStatus.INTERNAL_SERVER_ERROR);
 

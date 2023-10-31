@@ -42,7 +42,7 @@ public class WebConfig extends AbstractAnnotationConfigDispatcherServletInitiali
 		/* 그 외 기타 사용자 설정 */
 
 		// 사용자 지정 익셉션 설정을 할 것인지 처리
-		registeration.setInitParameter("throwExceptionIfNotHandlerFound", "true");
+		registeration.setInitParameter("throwExceptionIfNoHandlerFound", "true");
 		
 		
 		/*파일 업로드 설정*/

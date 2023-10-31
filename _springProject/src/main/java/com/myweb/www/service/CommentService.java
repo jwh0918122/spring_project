@@ -20,4 +20,6 @@ public interface CommentService {
 
 	PagingHandler getList(long bno, PagingVo pgvo);
 
+	CommentVO getCvo(long cno);
+
 }

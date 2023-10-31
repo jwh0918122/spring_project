@@ -16,6 +16,14 @@ public interface MemberDAO {
 	List<AuthVO> selectAuths(String username);
 
 	int updateLastLogin(String authEmail);
+
+	List<MemberVO> selectAll();
+
+	MemberVO selectOne(String email);
+
+	int memberUpdate(MemberVO mvo);
+
+	MemberVO selectOneModify(String email);
 	
 }
 
