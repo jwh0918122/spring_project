@@ -21,4 +21,6 @@ public interface MemberService {
 
 	MemberVO adminModifyMvo(String email);
 
+	int delMvo(String email);
+
 }

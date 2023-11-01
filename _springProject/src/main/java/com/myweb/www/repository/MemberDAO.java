@@ -24,6 +24,10 @@ public interface MemberDAO {
 	int memberUpdate(MemberVO mvo);
 
 	MemberVO selectOneModify(String email);
+
+	int deleteAuthMvo(String email);
+
+	int deleteMvo(String email);
 	
 }
 

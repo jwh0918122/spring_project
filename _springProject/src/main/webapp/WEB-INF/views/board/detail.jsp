@@ -68,12 +68,13 @@
 		let authEmail = <c:out value="${authEmail}"/>
 		console.log("authEmail>>> " + authEmail);
 		</script>
-				
+		
+			
 		<c:if test="${authEmail eq bvo.writer}">
 		<a href="/board/modify?bno=${bvo.bno}"><button class="btn btn-primary" type="button">수정</button></a> 
+		<a href="/board/remove?bno=${bvo.bno}&writer=${bvo.writer}"><button class="btn btn-primary" type="button">삭제</button></a> 
 		</c:if>
 		</sec:authorize>
-		<a href="/board/remove?bno=${bvo.bno}"><button class="btn btn-primary" type="button">삭제</button></a> 
 		<a href="/board/list"><button class="btn btn-primary" type="button">리스트로</button></a>
 		<hr>
 		<!-- 댓글 라인 -->

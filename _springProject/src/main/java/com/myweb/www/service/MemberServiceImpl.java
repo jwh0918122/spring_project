@@ -56,4 +56,14 @@ public class MemberServiceImpl implements MemberService {
 		return mdao.selectOneModify(email);
 	}
 
+	@Override
+	public int delMvo(String email) {
+		
+		int isOk=mdao.deleteAuthMvo(email);//권한 먼저 삭제
+		if(isOk>0) {
+			isOk = mdao.deleteMvo(email);
+		}		
+		return isOk;
+	}
+
 }

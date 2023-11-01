@@ -1,5 +1,6 @@
 package com.myweb.www.controller;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -100,29 +101,31 @@ public class BoardCotroller {
 
 		model.addAttribute("bvo", bdto.getBvo());
 		model.addAttribute("bdto", bdto);
+
 		return "/board/detail";
 	}
 
 	// bno로 bvo찾은다음 model에 담아서 수정 페이지로 이동
 	@GetMapping("/modify")
-	public String modify(Model model, @RequestParam("bno") long bno) {
+	public String modify(Model model, @RequestParam("bno") long bno, Principal principal) {
 		BoardVO bvo = bsv.detail(bno);
-		List<FileVO> flist = bsv.getFileList(bno);
+		if (bvo.getWriter().equals(principal.getName())) {
+			List<FileVO> flist = bsv.getFileList(bno);
+			BoardDTO bdto = new BoardDTO(bvo, flist);
 
-		BoardDTO bdto = new BoardDTO(bvo, flist);
-
-		model.addAttribute("bdto", bdto);
+			model.addAttribute("bdto", bdto);
+		}
 		return "/board/modify";
 	}
 
 	// 수정
 	@PostMapping("/modify")
-	public String modify(BoardVO bvo,RedirectAttributes red,
-			@RequestParam(name="files", required = false) MultipartFile[] files) {
-		
+	public String modify(BoardVO bvo, RedirectAttributes red,
+			@RequestParam(name = "files", required = false) MultipartFile[] files) {
+
 		List<FileVO> flist = null;
-		if(files[0].getSize()>0) { //files 0번지 배열에 파일이 있다면 
-			flist=fh.uploadFiles(files);
+		if (files[0].getSize() > 0) { // files 0번지 배열에 파일이 있다면
+			flist = fh.uploadFiles(files);
 		}
 		int isOk = bsv.modify(new BoardDTO(bvo, flist));
 
@@ -133,14 +136,17 @@ public class BoardCotroller {
 
 	// 삭제
 	@GetMapping("/remove")
-	public String remove(@RequestParam("bno") long bno, RedirectAttributes red) {
-		int reisOk = bsv.remove(bno);
-		red.addFlashAttribute("reisOk", reisOk);
+	public String remove(@RequestParam("bno") long bno,@RequestParam("writer") String writer, RedirectAttributes red,Principal principal) {
+		
+		if(writer.equals(principal.getName())) {
+			int reisOk = bsv.remove(bno);
+			red.addFlashAttribute("reisOk", reisOk);			
+		}
 		return "redirect:/board/list";
 	}
 
 	// 파일 삭제
-	@DeleteMapping(value="/fileDelete/{uuid}",produces = MediaType.TEXT_PLAIN_VALUE)
+	@DeleteMapping(value = "/fileDelete/{uuid}", produces = MediaType.TEXT_PLAIN_VALUE)
 	public ResponseEntity<String> fileDelete(@PathVariable("uuid") String uuid) {
 		int isOk = bsv.fileDelete(uuid);
 		return isOk > 0 ? new ResponseEntity<String>("1", HttpStatus.OK)

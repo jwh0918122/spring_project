@@ -1,5 +1,6 @@
 package com.myweb.www.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -64,6 +65,7 @@ public class MemberController {
 		return "redirect:/member/login";
 	}
 
+	//회원정보 리스트(관리자용)
 	@GetMapping("list")
 	public String listRegister(Model model) {
 		List<MemberVO> list = msv.getList();
@@ -74,29 +76,44 @@ public class MemberController {
 		model.addAttribute("list", list);
 		return "/member/list";
 	}	
+	//상세페이지(일반유저)
 	@GetMapping("detail")
 	public String detailRegister(@RequestParam("email") String email, Model model) {
 		MemberVO mvo = msv.getDetail(email);
 		model.addAttribute("mvo", mvo);
 		return "/member/detail";
 	}
+	//회원정보 수정(일반유저)
 	@PostMapping("modify")
 	public String modify(MemberVO mvo, HttpServletRequest req, HttpServletResponse res) {
 		log.info("mvo>>>>>확인 >>> ",mvo);
-		int isOk = msv.Modify(mvo);
-		logout(req, res);
+		
+			int isOk = msv.Modify(mvo);
+			logout(req, res);			
+		
 		return "index";		
 	}	
+	//회원정보 수정(관리자용)
 	@GetMapping("adminModify")
-	public String adminModify(@RequestParam("email") String email,Model model) {
+	public String adminModify(@RequestParam("email") String email, Model model){
 		MemberVO mvo = msv.adminModifyMvo(email);
 		model.addAttribute("mvo", mvo);
 		return "/member/adminModify";		
 	}
 	
+	//로그아웃
 	private void logout(HttpServletRequest req, HttpServletResponse res) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		new SecurityContextLogoutHandler().logout(req, res, auth);
 	}
+	//회원 탈퇴
+	@GetMapping("delMvo")
+	public String dleMvo(@RequestParam("email") String email,HttpServletRequest req, HttpServletResponse res) {
+		int isOk=msv.delMvo(email);
+		logout(req,res);
+		return"index";
+	}
+	
+	
 
 }

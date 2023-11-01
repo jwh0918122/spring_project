@@ -37,6 +37,7 @@
 	</table>
 	<button class="btn btn-primary" type="submit">수정</button>
 	</form>
+	<a href="/member/delMvo?email=${mvo.email}"><button class="btn btn-primary" type="button">회원 탈퇴</button></a>
 	<a href="/"><button class="btn btn-primary" type="button">홈으로</button></a>
 	<hr>
 	<jsp:include page="../common/footer.jsp" />

@@ -63,10 +63,13 @@ public class CommentServiceImpl implements CommentService{
 		return ph;
 	}
 
-	@Override
-	public CommentVO getCvo(long cno) {
-		return cdao.getCvo(cno);
-	}
+//	@Override
+//	public CommentVO getCvo(long cno) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
+
+
 
 
 }

@@ -33,5 +33,11 @@
 	<update id="memberUpdate">
 	update member set nick_name=#{nickName} where email=#{email}
 	</update>
+	<delete id="deleteMvo">
+	delete from member where email=#{email}
+	</delete>
+	<delete id="deleteAuthMvo">
+	delete from auth_member where email=#{email}
+	</delete>
 
 </mapper>
